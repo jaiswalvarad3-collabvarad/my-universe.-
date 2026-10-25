@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Universe | World Creator</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090d1c;color:white;font-family:Arial,sans-serif}
+header{padding:20px 5%;display:flex;justify-content:space-between;
+align-items:center;background:#11172b;border-bottom:1px solid #29304a}
+.logo{font-size:24px;font-weight:bold;color:#a99bff}
+button{cursor:pointer;border:0;border-radius:10px;padding:11px 15px;
+font-weight:bold;background:#8875ff;color:white}
+button:hover{filter:brightness(1.15)}
+input,select{background:#151d34;color:white;border:1px solid #414a6a;
+padding:12px;border-radius:9px;width:100%;outline:none}
+main{max-width:1200px;margin:auto;padding:22px}
+h2{font-size:19px}
+.layout{display:grid;grid-template-columns:300px 1fr;gap:20px}
+.panel{background:#11172b;border:1px solid #252e49;border-radius:16px;
+padding:18px;margin-bottom:16px}
+label{display:block;font-size:13px;color:#b7bfd9;margin:12px 0 6px}
+.row{display:flex;gap:8px;margin-top:10px}
+.row>*{flex:1;min-width:0}
+.world{height:410px;border-radius:16px;overflow:hidden;position:relative;
+background:linear-gradient(#514bb0 0%,#b17bd1 58%,#ffcfb0 100%);
+border:1px solid #41436d;transition:background .3s}
+.worldTop{padding:18px;position:relative;z-index:2}
+#worldName{font-size:25px;font-weight:bold}
+#worldDesc{font-size:13px;max-width:80%;color:#f2eaff}
+#sky{position:absolute;right:25px;top:65px;font-size:55px}
+#land{position:absolute;bottom:0;width:100%;height:36%;
+background:#303c62;clip-path:polygon(0 45%,20% 10%,42% 50%,65% 0,
+100% 30%,100% 100%,0 100%)}
+#ground{position:absolute;bottom:0;width:100%;height:18%;
+background:#26324b}
+#avatar{position:absolute;z-index:2;bottom:15%;left:48%;
+transform:translateX(-50%);width:95px;height:150px}
+.head{width:58px;height:58px;background:#f2c39b;margin:auto;
+border-radius:8px;position:relative;border:3px solid #20243a}
+.hair{position:absolute;top:-6px;left:-2px;width:58px;height:19px;
+background:#30233c;border-radius:8px 8px 2px 2px}
+.eyes{position:absolute;top:25px;left:12px;font-size:12px;color:#171b29}
+.body{width:66px;height:55px;background:#a28cff;border:3px solid #20243a;
+margin:2px auto 0;border-radius:5px}
+.legs{display:flex;justify-content:center;gap:5px}
+.legs span{width:25px;height:37px;background:#30364e;
+border:3px solid #20243a;border-radius:4px}
+#powerAura{position:absolute;inset:-25px;font-size:30px;text-align:center;
+animation:pulse 1.5s infinite;pointer-events:none}
+@keyframes pulse{50%{transform:scale(1.1);opacity:.65}}
+#sceneObjects{position:absolute;bottom:18%;width:100%;display:flex;
+justify-content:space-around;font-size:42px;z-index:1}
+#status{color:#a7e6bd;font-size:13px;margin-top:8px}
+.log{background:#0b1020;padding:12px;border-radius:10px;
+min-height:70px;font-size:13px;color:#d7dafa;line-height:1.7}
+.command{display:flex;gap:8px;margin-top:12px}
+.command input{flex:1;min-width:0}
+.small{font-size:12px;color:#aab4d2;line-height:1.7}
+.tag{display:inline-block;background:#242b48;padding:6px 9px;
+border-radius:7px;margin:4px;font-size:12px}
+footer{text-align:center;color:#8994b5;font-size:12px;padding:20px}
+@media(max-width:750px){.layout{grid-template-columns:1fr}
+.world{height:350px}header{padding:16px}main{padding:12px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">✦ MY UNIVERSE</div>
+  <button onclick="resetWorld()">↺ Reset World</button>
+</header>
+
+<main>
+  <h1>Build a universe. Become a legend.</h1>
+  <p class="small">Your character. Your rules. Your imagination.</p>
+
+  <div class="layout">
+    <aside>
+      <section class="panel">
+        <h2>🧍 My Character</h2>
+        <label>Character name</label>
+        <input id="charName" value="Player One">
+        <label>Outfit colour</label>
+        <input id="outfit" type="color" value="#a28cff">
+        <label>Character role</label>
+        <select id="role">
+          <option>Hero</option><option>Villain</option>
+          <option>Warrior</option><option>Wizard</option>
+          <option>Explorer</option>
+        </select>
+        <label>Superpower</label>
+        <input id="power" value="Lightning">
+        <div class="row">
+          <button onclick="updateCharacter()">Apply Changes</button>
+          <button onclick="randomize()">Random</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>🌍 World Settings</h2>
+        <label>World name</label>
+        <input id="nameInput" value="Crystal Kingdom">
+        <label>World theme</label>
+        <select id="theme">
+          <option value="fantasy">Fantasy Kingdom</option>
+          <option value="space">Outer Space</option>
+          <option value="forest">Mystic Forest</option>
+          <option value="ocean">Underwater World</option>
+          <option value="lava">Volcano World</option>
+          <option value="city">Futuristic City</option>
+        </select>
+        <label>World description</label>
+        <input id="descInput" value="A magical kingdom full of secrets.">
+        <button style="width:100%;margin-top:12px" onclick="applyWorld()">
+          Create My World
+        </button>
+      </section>
+    </aside>
+
+    <section>
+      <div class="world" id="world">
+        <div class="worldTop">
+          <div id="worldName">Crystal Kingdom</div>
+          <p id="worldDesc">A magical kingdom full of secrets.</p>
+          <div id="status">● YOUR WORLD IS ACTIVE</div>
+        </div>
+        <div id="sky">🌙</div>
+        <div id="sceneObjects">🏰　💎　🌲</div>
+        <div id="land"></div>
+        <div id="ground"></div>
+        <div id="avatar">
+          <div id="powerAura">⚡</div>
+          <div class="head">
+            <div class="hair"></div>
+            <div class="eyes">●　●</div>
+          </div>
+          <div class="body" id="avatarBody"></div>
+          <div class="legs"><span></span><span></span></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <h2>⌨️ Universe Command Center</h2>
+        <p class="small">Type what you want to change in your universe.</p>
+        <div class="command">
+          <input id="command" placeholder="e.g. Give me fire powers"
+            onkeydown="if(event.key==='Enter')runCommand()">
+          <button onclick="runCommand()">Create ✨</button>
+        </div>
+        <p class="small">
+          Try: "Make a space world" · "Create a villain named Shadow" ·
+          "Give me ice powers" · "Change my outfit to red" ·
+          "Add dragons" · "Make it temporary"
+        </p>
+        <div class="log" id="log">Welcome, creator! Your universe is waiting.</div>
+        <div class="row">
+          <button onclick="undoChange()">↶ Undo</button>
+          <button onclick="saveWorld()">💾 Save World</button>
+          <button onclick="loadWorld()">📂 Load World</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>🦸 Your Universe</h2>
+        <div id="characterInfo" class="tag">Player One · Hero</div>
+        <div id="powerInfo" class="tag">Power: Lightning</div>
+        <div id="villainInfo" class="tag">Villains: None yet</div>
+        <div id="extras" class="small">Your story starts here.</div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>MY UNIVERSE · Imagine it. Create it. Change it.</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+let villains = [];
+let extras = [];
+let history = [];
+let temporary = false;
+let savedTemporaryState = null;
+
+const themes = {
+  fantasy: {
+    sky:"🌙", objects:"🏰　💎　🌲",
+    background:"linear-gradient(#514bb0,#b17bd1 58%,#ffcfb0)",
+    land:"#303c62", ground:"#26324b"
+  },
+  space: {
+    sky:"🪐", objects:"🚀　🌟　🛸",
+    background:"linear-gradient(#03051b,#20266b 60%,#543a8b)",
+    land:"#282747", ground:"#11142b"
+  },
+  forest: {
+    sky:"☀️", objects:"🌲　🦋　🍄",
+    background:"linear-gradient(#79c7d7,#c8ebad 60%,#e2d8a3)",
+    land:"#376d42", ground:"#254d32"
+  },
+  ocean: {
+    sky:"🐬", objects:"🐠　🪸　🐚",
+    background:"linear-gradient(#1ac2e4,#0876b6 65%,#07456e)",
+    land:"#126b81", ground:"#084358"
+  },
+  lava: {
+    sky:"🌋", objects:"🔥　🪨　🐉",
+    background:"linear-gradient(#35142c,#a63236 65%,#ed813f)",
+    land:"#54252b", ground:"#281c28"
+  },
+  city: {
+    sky:"🌆", objects:"🏙️　🚁　🚗",
+    background:"linear-gradient(#192b56,#7054a0 60%,#f5a16d)",
+    land:"#33344f", ground:"#1a1b30"
+  }
+};
+
+function snapshot(){
+  return {
+    charName:$("charName").value,
+    outfit:$("outfit").value,
+    role:$("role").value,
+    power:$("power").value,
+    nameInput:$("nameInput").value,
+    theme:$("theme").value,
+    descInput:$("descInput").value,
+    villains:[...villains], extras:[...extras]
+  };
+}
+
+function remember(){
+  history.push(snapshot());
+  if(history.length>30)history.shift();
+}
+
+function render(){
+  const t=themes[$("theme").value] || themes.fantasy;
+  $("worldName").textContent=$("nameInput").value || "My Universe";
+  $("worldDesc").textContent=$("descInput").value;
+  $("world").style.background=t.background;
+  $("sky").textContent=t.sky;
+  $("sceneObjects").textContent=t.objects;
+  $("land").style.background=t.land;
+  $("ground").style.background=t.ground;
+  $("avatarBody").style.background=$("outfit").value;
+  $("powerAura").textContent=
+    /fire/i.test($("power").value)?"🔥":
+    /ice/i.test($("power").value)?"❄️":
+    /water/i.test($("power").value)?"💧":
+    /shadow/i.test($("power").value)?"🌑":
+    /light/i.test($("power").value)?"⚡":"✨";
+
+  $("characterInfo").textContent=
+    ($("charName").value||"Player")+" · "+$("role").value;
+  $("powerInfo").textContent="Power: "+$("power").value;
+  $("villainInfo").textContent="Villains: "+(villains.join(", ")||"None yet");
+  $("extras").textContent=extras.join(" · ")||"Your story starts here.";
+}
+
+function updateCharacter(){
+  remember();render();message("Character updated successfully!");
+}
+
+function applyWorld(){
+  remember();render();message("Your world has changed!");
+}
+
+function message(text){
+  $("log").textContent=text;
+  $("status").textContent="● "+text.toUpperCase();
+}
+
+function setOutfit(color){
+  const colors={
+    red:"#ef4444",blue:"#3b82f6",green:"#22c55e",
+    black:"#222222",purple:"#a28cff",pink:"#ec70bc",
+    white:"#eeeeee",gold:"#f4bd36"
+  };
+  const found=Object.keys(colors).find(c=>color.toLowerCase().includes(c));
+  if(found)$("outfit").value=colors[found];
+  else if(/^#[0-9a-f]{6}$/i.test(color))$("outfit").value=color;
+}
+
+function runCommand(){
+  const raw=$("command").value.trim();
+  if(!raw)return;
+  const c=raw.toLowerCase();
+  remember();
+
+  if(c.includes("temporary")){
+    temporary=true;
+    savedTemporaryState=history.pop()||snapshot();
+    message("Temporary mode enabled. Type 'undo' to revert your last change.");
+  }else if(c==="undo"||c.includes("undo change")){
+    undoChange(false);
+    $("command").value="";
+    return;
+  }else if(c.includes("make a ")||c.includes("change my world")||
+           c.includes("world to")||c.includes("create a world")||
+           c.includes("world should be")){
+    if(c.includes("space"))$("theme").value="space";
+    else if(c.includes("forest"))$("theme").value="forest";
+    else if(c.includes("ocean")||c.includes("underwater"))$("theme").value="ocean";
+    else if(c.includes("lava")||c.includes("volcano"))$("theme").value="lava";
+    else if(c.includes("city")||c.includes("futuristic"))$("theme").value="city";
+    else if(c.includes("fantasy")||c.includes("kingdom"))$("theme").value="fantasy";
+    $("descInput").value=raw;
+    message("World updated! Choose a theme in World Settings for more options.");
+  }else if(c.includes("villain")||c.includes("enemy")){
+    const m=raw.match(/(?:named|called)\s+(.+)/i);
+    const name=m?m[1].replace(/[.!?]+$/,""):"Mystery Villain";
+    villains.push(name);
+    extras.push("⚔️ "+name+" has entered your story");
+    message("New villain created: "+name);
+  }else if(c.includes("hero")){
+    const m=raw.match(/(?:named|called)\s+(.+)/i);
+    const name=m?m[1].replace(/[.!?]+$/,""):"New Hero";
+    extras.push("🦸 Hero: "+name);
+    message("Hero added to your universe: "+name);
+  }else if(c.includes("power")){
+    let p=raw.replace(/give me|add|change|my|a|an|the|power|powers|to|with/gi,"").trim();
+    $("power").value=p||"Superpower";
+    message("New power unlocked: "+$("power").value);
+  }else if(c.includes("outfit")||c.includes("clothes")||c.includes("wear")){
+    const colors=["red","blue","green","black","purple","pink","white","gold"];
+    const found=colors.find(col=>c.includes(col));
+    if(found){setOutfit(found);message("Outfit changed to "+found+"!");}
+    else message("Choose a colour name, such as red, blue, purple or gold.");
+  }else if(c.includes("name me")||c.includes("my name")||
+           c.includes("character name")){
+    const m=raw.match(/(?:name me|my name is|character name is)\s+(.+)/i);
+    if(m){$("charName").value=m[1];message("Character renamed!");}
+    else message("Try: My name is Nova");
+  }else if(c.includes("dragon")||c.includes("castle")||
+           c.includes("car")||c.includes("weapon")||
+           c.includes("mission")||c.includes("pet")){
+    extras.push("✨ "+raw);
+    message("Added to your story: "+raw);
+  }else{
+    $("descInput").value=raw;
+    extras.push("💭 "+raw);
+    message("Idea added! I can apply supported commands; for other ideas, edit World Settings or add details to your story.");
+  }
+
+  render();
+  $("command").value="";
+}
+
+function undoChange(showMessage=true){
+  if(!history.length){
+    if(showMessage)message("Nothing to undo yet.");
+    return;
+  }
+  const s=history.pop();
+  $("charName").value=s.charName;
+  $("outfit").value=s.outfit;
+  $("role").value=s.role;
+  $("power").value=s.power;
+  $("nameInput").value=s.nameInput;
+  $("theme").value=s.theme;
+  $("descInput").value=s.descInput;
+  villains=s.villains;
+  extras=s.extras;
+  temporary=false;
+  render();
+  if(showMessage)message("Last change undone!");
+}
+
+function saveWorld(){
+  localStorage.setItem("myUniverse",JSON.stringify(snapshot()));
+  message("World saved in this browser!");
+}
+
+function loadWorld(){
+  const raw=localStorage.getItem("myUniverse");
+  if(!raw){message("No saved world found. Save your world first.");return;}
+  try{
+    const s=JSON.parse(raw);
+    $("charName").value=s.charName;
+    $("outfit").value=s.outfit;
+    $("role").value=s.role;
+    $("power").value=s.power;
+    $("nameInput").value=s.nameInput;
+    $("theme").value=s.theme;
+    $("descInput").value=s.descInput;
+    villains=s.villains||[];
+    extras=s.extras||[];
+    render();message("Saved world loaded!");
+  }catch(e){message("Could not load the saved world.");}
+}
+
+function randomize(){
+  remember();
+  const names=["Nova","Shadow","Blaze","Pixel","Storm"];
+  const powers=["Fire","Ice","Lightning","Shadow","Water"];
+  $("charName").value=names[Math.floor(Math.random()*names.length)];
+  $("power").value=powers[Math.floor(Math.random()*powers.length)];
+  $("outfit").value="#"+Math.floor(Math.random()*16777215).toString(16).padStart(6,"0");
+  render();message("Random character generated!");
+}
+
+function resetWorld(){
+  if(!confirm("Reset your current world? Unsaved changes will be lost."))return;
+  history=[];
+  villains=[];extras=[];temporary=false;
+  $("charName").value="Player One";
+  $("outfit").value="#a28cff";
+  $("role").value="Hero";
+  $("power").value="Lightning";
+  $("nameInput").value="Crystal Kingdom";
+  $("theme").value="fantasy";
+  $("descInput").value="A magical kingdom full of secrets.";
+  render();message("A fresh universe awaits!");
+}
+
+render();
+</script>
+</body>
+</html>
